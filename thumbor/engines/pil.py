@@ -579,6 +579,16 @@ class Engine(BaseEngine):
                 # 26.10.22: remove ".heic, .heif" in a month(when pillow_heif get updated)
                 self.image = self.image.convert("RGBA")
 
+            if ext == ".jxl" and self.image.mode not in (
+                "RGB",
+                "RGBA",
+                "L",
+                "LA",
+                "I;16",
+                "F",
+            ):
+                self.image = self.image.convert("RGBA")
+
             if ext == ".gif" and self.image.mode == "LA":
                 # Pillow's GIF writer flattens LA to L, but picks the
                 # transparent palette entry out of RGBA

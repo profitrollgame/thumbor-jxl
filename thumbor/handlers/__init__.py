@@ -46,6 +46,7 @@ PREFERENCE_AUTO_IMAGE_FORMAT_METHODS = {
     "avif": "_supports_avif",
     "jpg": "_supports_jpg",
     "heif": "_supports_heif",
+    "jxl": "_supports_jxl",
     "png": "_supports_png",
 }
 
@@ -54,6 +55,7 @@ LEGACY_AUTO_IMAGE_FORMAT_METHODS = {
     "avif": "can_auto_convert_to_avif",
     "jpg": "_can_auto_convert_to_jpg_in_legacy_mode",
     "heif": "can_auto_convert_to_heif",
+    "jxl": "can_auto_convert_to_jxl",
     "png": "can_auto_convert_to_png",
 }
 
@@ -62,6 +64,7 @@ LEGACY_AUTO_IMAGE_FORMAT_LOG_MESSAGES = {
     "avif": "Image format set by AUTO_AVIF as %s.",
     "jpg": "Image format set by AUTO_PNG_TO_JPG or AUTO_JPG as %s.",
     "heif": "Image format set by AUTO_HEIF as %s.",
+    "jxl": "Image format set by AUTO_JXL as %s.",
     "png": "Image format set by AUTO_PNG as %s.",
 }
 
@@ -607,6 +610,18 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def can_auto_convert_to_heif(self):
         return self.context.config.AUTO_HEIF and self._supports_heif()
+
+    def _supports_jxl(self):
+        request = self.context.request
+
+        return (
+            self._accepts_parsed_mime_type("accepts_jxl", "image/jxl")
+            and not request.engine.is_multiple()
+            and request.engine.can_auto_convert_to_jxl()
+        )
+
+    def can_auto_convert_to_jxl(self):
+        return self.context.config.AUTO_JXL and self._supports_jxl()
 
     def _supports_jpg(self):
         request = self.context.request

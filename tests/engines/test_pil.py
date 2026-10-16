@@ -731,8 +731,8 @@ class PilEngineTestCase(TestCase):
             buffer = image_file.read()
         engine.load(buffer, ".jpg")
         assert engine.image.format == "JPEG"
-        heif_bytes = BytesIO(engine.read(".jxl"))
-        with Image.open(heif_bytes) as img:
+        jxl_bytes = BytesIO(engine.read(".jxl"))
+        with Image.open(jxl_bytes) as img:
             assert img.format == "JXL"
 
     @skip_unless_jxl
@@ -742,8 +742,8 @@ class PilEngineTestCase(TestCase):
             buffer = image_file.read()
         engine.load(buffer, ".png")
         assert engine.size == (691, 212)
-        heif_bytes = BytesIO(engine.read(".jxl"))
-        with Image.open(heif_bytes) as img:
+        jxl_bytes = BytesIO(engine.read(".jxl"))
+        with Image.open(jxl_bytes) as img:
             assert img.format == "JXL"
             assert img.size == (691, 212)
 
