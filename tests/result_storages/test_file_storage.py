@@ -504,7 +504,7 @@ class AutoImageFormatCacheKeyTestCase(TestCase):
             "Ignoring invalid AUTO_IMAGE_FORMAT_PREFERENCE values: %r. "
             "Valid formats are: %s.",
             ["invalid", 1, "INVALID"],
-            "webp, avif, jpg, heif, png",
+            "webp, avif, jxl, jpg, heif, png",
         )
 
     def test_normalized_preference_cache_is_published_atomically(self):

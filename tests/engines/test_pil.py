@@ -22,6 +22,7 @@ from tests.base import (
     skip_unless_avif,
     skip_unless_avif_encoder,
     skip_unless_heif,
+    skip_unless_jxl,
 )
 from thumbor.config import Config
 from thumbor.context import Context
@@ -721,6 +722,29 @@ class PilEngineTestCase(TestCase):
         heif_bytes = BytesIO(engine.read(".heic"))
         with Image.open(heif_bytes) as img:
             assert img.format == "HEIF"
+            assert img.size == (691, 212)
+
+    @skip_unless_jxl
+    def test_convert_jpg_to_jxl(self):
+        engine = Engine(self.context)
+        with open(join(STORAGE_PATH, "image.jpg"), "rb") as image_file:
+            buffer = image_file.read()
+        engine.load(buffer, ".jpg")
+        assert engine.image.format == "JPEG"
+        heif_bytes = BytesIO(engine.read(".jxl"))
+        with Image.open(heif_bytes) as img:
+            assert img.format == "JXL"
+
+    @skip_unless_jxl
+    def test_jxl_odd_dimensions(self):
+        engine = Engine(self.context)
+        with open(join(STORAGE_PATH, "1bit.png"), "rb") as image_file:
+            buffer = image_file.read()
+        engine.load(buffer, ".png")
+        assert engine.size == (691, 212)
+        heif_bytes = BytesIO(engine.read(".jxl"))
+        with Image.open(heif_bytes) as img:
+            assert img.format == "JXL"
             assert img.size == (691, 212)
 
     def test_should_preserve_copyright_exif_in_image(self):

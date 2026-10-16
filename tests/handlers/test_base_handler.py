@@ -25,10 +25,12 @@ from tests.base import (
     assert_is_avif,
     assert_is_heif,
     assert_is_jpeg,
+    assert_is_jxl,
     assert_is_png,
     assert_similar_to,
     skip_unless_avif,
     skip_unless_heif,
+    skip_unless_jxl,
 )
 from tests.fixtures.images import (
     alabama1,
@@ -594,5 +596,74 @@ class ImagingOperationsTestCase(BaseImagingTestCase):
                     "thumbor",
                     logging.WARNING,
                     "[PILEngine] HEIF encoding unavailable, defaulting to .png",
+                )
+            ]
+
+    @gen_test
+    async def test_can_read_jxl(self):
+        response = await self.async_fetch("/unsafe/image.jxl")
+        assert response.code == 200
+        assert_is_jxl(response.body)
+
+    @skip_unless_jxl
+    @gen_test
+    async def test_jxl_format(self):
+        response = await self.async_fetch(
+            "/unsafe/filters:format(jxl)/image.jpg"
+        )
+        assert response.code == 200
+        assert_is_jxl(response.body)
+
+    @skip_unless_jxl
+    @gen_test
+    async def test_jxl_quality_setting(self):
+        self.context.config.QUALITY = 80
+        self.context.config.JXL_QUALITY = 50
+        with mock.patch.object(
+            Engine,
+            "read",
+            autospec=True,
+            side_effect=Engine.read,
+        ) as mock_read:
+            response = await self.async_fetch(
+                "/unsafe/filters:format(jxl)/image.jpg"
+            )
+            assert response.code == 200
+            assert_is_jxl(response.body)
+            mock_read.assert_called_with(mock.ANY, ".jxl", 50)
+
+    @gen_test
+    @pytest.mark.usefixtures("unittest_caplog")
+    async def test_jxl_unavailable_format_jpg(self):
+        self.caplog.set_level(logging.WARNING)
+        with mock.patch.object(thumbor.engines.pil, "HAVE_JXL", False):
+            response = await self.async_fetch(
+                "/unsafe/filters:format(jxl)/image.jpg"
+            )
+            assert response.code == 200
+            assert_is_jpeg(response.body)
+            assert self.caplog.record_tuples == [
+                (
+                    "thumbor",
+                    logging.WARNING,
+                    "[PILEngine] JXL encoding unavailable, defaulting to .jpg",
+                )
+            ]
+
+    @gen_test
+    @pytest.mark.usefixtures("unittest_caplog")
+    async def test_jxl_unavailable_format_png(self):
+        self.caplog.set_level(logging.WARNING)
+        with mock.patch.object(thumbor.engines.pil, "HAVE_JXL", False):
+            response = await self.async_fetch(
+                "/unsafe/filters:format(jxl)/1x1.png"
+            )
+            assert response.code == 200
+            assert_is_png(response.body)
+            assert self.caplog.record_tuples == [
+                (
+                    "thumbor",
+                    logging.WARNING,
+                    "[PILEngine] JXL encoding unavailable, defaulting to .png",
                 )
             ]

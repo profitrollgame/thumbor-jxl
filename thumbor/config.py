@@ -18,6 +18,8 @@ from thumbor import __version__
 from thumbor.filters import BUILTIN_FILTERS
 from thumbor.handler_lists import BUILTIN_HANDLERS
 
+# pylint: disable=too-many-lines
+
 HOME = expanduser("~")
 
 Config.define(
@@ -178,6 +180,14 @@ Config.define(
 )
 
 Config.define(
+    "JXL_QUALITY",
+    None,
+    "Quality index used for generated JXL images. If not set (None) the same "
+    "level of JPEG quality will be used.",
+    "Imaging",
+)
+
+Config.define(
     "SRGB_PROFILE",
     None,
     "Path to the file containing the sRGB ICC profile to use when images need "
@@ -227,6 +237,13 @@ Config.define(
     "Imaging",
 )
 Config.define(
+    "AUTO_JXL",
+    False,
+    "Specifies whether JXL format should be used automatically if the request accepts it "
+    "(via Accept header) and pillow-jxl-plugin is enabled",
+    "Imaging",
+)
+Config.define(
     "AUTO_PNG",
     False,
     "Specifies whether PNG format should be used automatically if the request accepts it "
@@ -250,7 +267,7 @@ Config.define(
     "AUTO_IMAGE_FORMAT_PREFERENCE",
     [],
     "Ordered list of preferred formats to be used automatically. "
-    "Valid formats are webp, avif, jpg, heif and png. A list containing at "
+    "Valid formats are webp, avif, jxl, jpg, heif and png. A list containing at "
     "least one valid format overrides all individual AUTO_* format settings, "
     "but AUTO_PNG_TO_JPG remains an independent fallback.",
     "Imaging",

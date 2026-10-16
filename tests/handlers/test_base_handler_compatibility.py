@@ -118,6 +118,7 @@ def test_accepts_mime_type_preserves_literal_wildcard_semantics():
     [
         ("can_auto_convert_to_avif", "image/avif"),
         ("can_auto_convert_to_heif", "image/heif"),
+        ("can_auto_convert_to_jxl", "image/jxl"),
         ("can_auto_convert_to_jpg", "image/jpeg"),
         ("can_auto_convert_to_png", "image/png"),
     ],
@@ -134,9 +135,11 @@ def test_accepts_mime_type_remains_an_extension_point(
     engine.has_transparency.return_value = False
     engine.can_auto_convert_to_avif.return_value = True
     engine.can_auto_convert_to_heif.return_value = True
+    engine.can_auto_convert_to_jxl.return_value = True
     request = SimpleNamespace(
         accepts_avif=False,
         accepts_heif=False,
+        accepts_jxl=False,
         accepts_jpeg=False,
         accepts_png=False,
         engine=engine,
@@ -146,6 +149,7 @@ def test_accepts_mime_type_remains_an_extension_point(
         config=SimpleNamespace(
             AUTO_AVIF=True,
             AUTO_HEIF=True,
+            AUTO_JXL=True,
             AUTO_JPG=True,
             AUTO_PNG=True,
         ),
@@ -394,6 +398,7 @@ def test_custom_accepts_mime_type_runs_after_engine_is_available():
     [
         {"AUTO_AVIF": True},
         {"AUTO_HEIF": True},
+        {"AUTO_JXL": True},
         {"AUTO_JPG": True},
         {"AUTO_PNG": True},
         {"AUTO_IMAGE_FORMAT_PREFERENCE": ["webp", "jpg"]},
@@ -515,6 +520,7 @@ async def test_custom_accepts_mime_type_bypasses_result_storage_read_and_write()
     [
         ("can_auto_convert_to_avif", "image/avif"),
         ("can_auto_convert_to_heif", "image/heif"),
+        ("can_auto_convert_to_jxl", "image/jxl"),
         ("can_auto_convert_to_jpg", "image/jpeg"),
         ("can_auto_convert_to_png", "image/png"),
     ],
@@ -527,6 +533,7 @@ def test_legacy_request_object_falls_back_to_the_accept_header(
     engine.has_transparency.return_value = False
     engine.can_auto_convert_to_avif.return_value = True
     engine.can_auto_convert_to_heif.return_value = True
+    engine.can_auto_convert_to_jxl.return_value = True
     request = SimpleNamespace(
         engine=engine,
         headers={"Accept": accept_header},
@@ -535,6 +542,7 @@ def test_legacy_request_object_falls_back_to_the_accept_header(
         config=SimpleNamespace(
             AUTO_AVIF=True,
             AUTO_HEIF=True,
+            AUTO_JXL=True,
             AUTO_JPG=True,
             AUTO_PNG=True,
         ),

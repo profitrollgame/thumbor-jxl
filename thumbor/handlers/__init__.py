@@ -761,6 +761,10 @@ class BaseHandler(tornado.web.RequestHandler):
                 quality = self.context.config.HEIF_QUALITY
                 if quality is None:
                     quality = 75
+            elif image_extension == ".jxl":
+                quality = self.context.config.JXL_QUALITY
+                if quality is None:
+                    quality = 75
             else:
                 quality = self.context.config.QUALITY
 

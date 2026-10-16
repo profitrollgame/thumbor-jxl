@@ -446,7 +446,7 @@ WARNING: When using gifsicle engine, filters will be skipped, except for
 
 These configurations indicates that thumbor will try to automatically convert
 the image format to a lighter image format, according to this compression order:
-`WEBP, AVIF, JPG, HEIF, PNG` — from highest (`WEBP`) to lowest (`PNG`) priority.
+`WEBP, AVIF, JXL, JPG, HEIF, PNG` — from highest (`WEBP`) to lowest (`PNG`) priority.
 
 #### AUTO_WEBP
 
@@ -521,13 +521,23 @@ supports "image/heif" and pillow-heif is enabled.
 AUTO_HEIF = True
 ```
 
+#### AUTO_JXL
+
+This option indicates whether thumbor should send JXL images automatically if
+the request comes with an "Accept" header that specifies that the browser
+supports "image/jxl" and pillow-jxl-plugin is enabled.
+
+```python
+AUTO_JXL = True
+```
+
 #### AUTO_IMAGE_FORMAT_PREFERENCE
 
 This option defines the order in which thumbor attempts automatic output
-formats. The valid tokens are `webp`, `avif`, `jpg`, `heif` and `png`. Values
-are stripped of surrounding whitespace and converted to lowercase. Duplicate
-values after the first occurrence, non-string values and unknown tokens are
-ignored.
+formats. The valid tokens are `webp`, `avif`, `jpg`, `heif`, `jxl`, and `png`.
+Values  are stripped of surrounding whitespace and converted to lowercase.
+Duplicate values after the first occurrence, non-string values and unknown
+tokens are ignored.
 
 For each entry, thumbor checks the request's `Accept` header and the current
 engine's capabilities, then selects the first eligible format. AVIF and HEIF
@@ -540,25 +550,26 @@ JPEG only. If no entry is eligible, thumbor preserves the engine's output
 format, except for the independent `AUTO_PNG_TO_JPG` fallback described above.
 
 A preference list containing at least one valid entry overrides `AUTO_WEBP`,
-`AUTO_AVIF`, `AUTO_JPG`, `AUTO_PNG` and `AUTO_HEIF`. If any entries are invalid,
-thumbor logs one warning listing the ignored values. If every entry is invalid,
-thumbor treats the preference as empty. An empty preference uses the individual
-settings in their legacy order: `webp`, `avif`, `jpg`, `heif`, then `png`.
+`AUTO_AVIF`, `AUTO_JPG`, `AUTO_JXL`, `AUTO_PNG` and `AUTO_HEIF`. If any entries
+are invalid, thumbor logs one warning listing the ignored values. If every entry
+is invalid,  thumbor treats the preference as empty. An empty preference uses the
+individual  settings in their legacy order: `webp`, `avif`, `jpg`, `heif`, `jxl`,
+then `png`.
 
 ```python
 # Prioritize AVIF over WebP.
-AUTO_IMAGE_FORMAT_PREFERENCE = ["avif", "webp", "jpg", "png", "heif"]
+AUTO_IMAGE_FORMAT_PREFERENCE = ["avif", "webp", "jpg", "png", "heif", "jxl"]
 
 # Or prioritize JPEG for workloads where that is preferable.
-AUTO_IMAGE_FORMAT_PREFERENCE = ["jpg", "webp", "avif", "png", "heif"]
+AUTO_IMAGE_FORMAT_PREFERENCE = ["jpg", "webp", "avif", "png", "heif", "jxl"]
 ```
 
 The result-storage cache key must vary with the active formats accepted by the
 request. The built-in file result storage does this automatically and uses an
 isolated namespace whenever a preference, `AUTO_AVIF`, `AUTO_JPG`, `AUTO_HEIF`,
-`AUTO_PNG` or `AUTO_PNG_TO_JPG` is active. It migrates legacy entries only for
-configurations where the old `default` or WebP namespace is unambiguous. Custom
-result storages must use
+`AUTO_JXL`, `AUTO_PNG` or `AUTO_PNG_TO_JPG` is active. It migrates legacy entries
+only for configurations where the old `default` or WebP namespace is unambiguous.
+Custom result storages must use
 `thumbor.auto_image_format.get_auto_image_format_cache_key` as described in
 {doc}`custom_result_storages`. When enabling or reordering this setting, do not
 migrate a legacy cached object into a new format namespace unless its content
@@ -566,12 +577,12 @@ type is verified; a cache purge is the safest upgrade path for storages that
 cannot isolate the old entries.
 
 This namespace change also applies on upgrade when the preference remains empty
-but `AUTO_AVIF`, `AUTO_JPG`, `AUTO_HEIF`, `AUTO_PNG` or `AUTO_PNG_TO_JPG` is
-already enabled. Existing generated images in the legacy `default` namespace are
-deliberately treated as cache misses and regenerated. Plan for a temporarily
-cold cache, pre-warm it or use a gradual rollout if the additional origin and
-processing load would be significant. Legacy files are not removed
-automatically, so account for their disk usage until they are cleaned up
+but `AUTO_AVIF`, `AUTO_JPG`, `AUTO_HEIF`, `AUTO_JXL`, `AUTO_PNG` or
+`AUTO_PNG_TO_JPG` is already enabled. Existing generated images in the legacy
+`default` namespace are  deliberately treated as cache misses and regenerated.
+Plan for a temporarily  cold cache, pre-warm it or use a gradual rollout if the
+additional origin and processing load would be significant. Legacy files are not
+removed automatically, so account for their disk usage until they are cleaned up
 separately. An `AUTO_WEBP`-only configuration keeps its existing cache
 namespace.
 

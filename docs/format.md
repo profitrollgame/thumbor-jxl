@@ -5,7 +5,7 @@ Usage: `format(image-format)`
 ## Description
 
 This filter specifies the output format of the image. The output must be one of:
-"webp", "jpeg", "gif", "png", "avif" or "heic".
+"webp", "jpeg", "gif", "png", "avif", "heic", or "jxl".
 
 ## Arguments
 

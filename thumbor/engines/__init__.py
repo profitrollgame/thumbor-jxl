@@ -122,6 +122,11 @@ class BaseEngine:
             img_mime = "image/jp2"
         elif buffer[4:12] in (b"ftypavif", b"ftypavis"):
             img_mime = "image/avif"
+        elif (
+            buffer[:2] == b"\xff\x0a"
+            or buffer[:12] == b"\x00\x00\x00\x0cJXL \x0d\x0a\x87\x0a"
+        ):
+            img_mime = "image/jxl"
         elif buffer[4:8] == b"ftyp" and buffer[8:12] in (
             b"heic",
             b"heix",
@@ -420,6 +425,9 @@ class BaseEngine:
     def heif_enabled(self):
         raise NotImplementedError()
 
+    def jxl_enabled(self):
+        raise NotImplementedError()
+
     def cleanup(self):
         pass
 
@@ -433,3 +441,6 @@ class BaseEngine:
 
     def can_auto_convert_to_heif(self):
         return self.heif_enabled()
+
+    def can_auto_convert_to_jxl(self):
+        return self.jxl_enabled()

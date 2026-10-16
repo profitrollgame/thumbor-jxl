@@ -311,6 +311,7 @@ class RequestParametersTestCase(TestCase):
         assert params.accepts_webp is False
         assert params.accepts_avif is False
         assert params.accepts_heif is False
+        assert params.accepts_jxl is False
         assert params.accepts_png is False
         assert params.accepts_jpeg is False
         assert params.max_bytes is None
@@ -380,13 +381,14 @@ class RequestParametersTestCase(TestCase):
         request = mock.Mock(
             path="/test.jpg",
             headers={
-                "Accept": "image/webp,image/avif,image/heif,image/png,image/jpeg"
+                "Accept": "image/webp,image/avif,image/heif,image/jxl,image/png,image/jpeg"
             },
         )
         params = RequestParameters(request=request, image="/test.jpg")
         assert params.accepts_webp is True
         assert params.accepts_avif is True
         assert params.accepts_heif is True
+        assert params.accepts_jxl is True
         assert params.accepts_png is True
         assert params.accepts_jpeg is True
         assert params.image_url == "/test.jpg"
@@ -441,6 +443,7 @@ class RequestParametersTestCase(TestCase):
         assert params.accepts_webp is True
         assert params.accepts_avif is True
         assert params.accepts_heif is True
+        assert params.accepts_jxl is True
         assert params.accepts_png is True
         assert params.accepts_jpeg is True
 
@@ -456,6 +459,7 @@ class RequestParametersTestCase(TestCase):
         assert params.accepts_webp is False
         assert params.accepts_avif is False
         assert params.accepts_heif is False
+        assert params.accepts_jxl is False
         assert params.accepts_png is False
         assert params.accepts_jpeg is False
 

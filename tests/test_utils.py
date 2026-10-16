@@ -44,6 +44,7 @@ class UtilsTestCase(TestCase):
         assert CONTENT_TYPE.get(".avif") == "image/avif"
         assert CONTENT_TYPE.get(".heic") == "image/heif"
         assert CONTENT_TYPE.get(".heif") == "image/heif"
+        assert CONTENT_TYPE.get(".jxl") == "image/jxl"
 
     @staticmethod
     def test_can_get_extension():
@@ -57,6 +58,7 @@ class UtilsTestCase(TestCase):
         assert EXTENSION.get("image/tiff") == ".tif"
         assert EXTENSION.get("image/avif") == ".avif"
         assert EXTENSION.get("image/heif") == ".heic"
+        assert EXTENSION.get("image/jxl") == ".jxl"
 
     @staticmethod
     def test_can_get_logger():

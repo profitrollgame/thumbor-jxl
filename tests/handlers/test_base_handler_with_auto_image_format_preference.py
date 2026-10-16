@@ -37,11 +37,13 @@ def resolve_preferred_extension(
     engine.can_convert_to_webp.return_value = "webp" in accepted_formats
     engine.can_auto_convert_to_avif.return_value = "avif" in accepted_formats
     engine.can_auto_convert_to_heif.return_value = "heif" in accepted_formats
+    engine.can_auto_convert_to_jxl.return_value = "jxl" in accepted_formats
     engine.can_auto_convert_png_to_jpg.return_value = False
     request = SimpleNamespace(
         accepts_webp="webp" in accepted_formats,
         accepts_avif="avif" in accepted_formats,
         accepts_heif="heif" in accepted_formats,
+        accepts_jxl="jxl" in accepted_formats,
         accepts_jpeg="jpg" in accepted_formats,
         accepts_png="png" in accepted_formats,
         auto_png_to_jpg=None,
@@ -59,7 +61,7 @@ def resolve_preferred_extension(
 
 
 @pytest.mark.parametrize(
-    "image_format", ["webp", "avif", "jpg", "heif", "png"]
+    "image_format", ["webp", "avif", "jpg", "heif", "jxl", "png"]
 )
 def test_resolves_every_supported_preferred_format(image_format):
     assert resolve_preferred_extension([image_format]) == f".{image_format}"
@@ -193,6 +195,7 @@ class ImageOperationsWithAutoImageFormatPreferenceOverrideTestCase(
         cfg.AUTO_JPG = False
         cfg.AUTO_PNG = False
         cfg.AUTO_HEIF = False
+        cfg.AUTO_JXL = False
         cfg.AUTO_IMAGE_FORMAT_PREFERENCE = [" invalid ", " WebP ", "webp"]
         cfg.FILTERS = [*cfg.FILTERS, "thumbor.filters.autojpg"]
 

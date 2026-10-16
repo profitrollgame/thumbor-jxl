@@ -71,11 +71,11 @@ discriminator even when no configured format was accepted. Include it in both
 read and write keys before any cache lookup.
 
 If a custom handler overrides `BaseHandler.accepts_mime_type` while `AUTO_AVIF`,
-`AUTO_HEIF`, `AUTO_JPG`, `AUTO_PNG` or a preference containing one of those
-formats is active, thumbor bypasses result storage for that request. The
-override may depend on the image engine, filters or other state that does not
-exist during the pre-load cache lookup, so no safe cache discriminator can be
-calculated at that point. The override continues to run during output-format
+`AUTO_HEIF`, `AUTO_JXL`, `AUTO_JPG`, `AUTO_PNG` or a preference containing one
+of those  formats is active, thumbor bypasses result storage for that request.
+The override may depend on the image engine, filters or other state that does
+not exist during the pre-load cache lookup, so no safe cache discriminator can
+be calculated at that point. The override continues to run during output-format
 selection, at the same stage as before. The same bypass applies to request
 objects built by custom handler code without the parsed `accepts_*` attributes:
 their format decisions fall back to reading the Accept header, so no cache key

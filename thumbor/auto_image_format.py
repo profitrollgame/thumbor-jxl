@@ -9,7 +9,14 @@
 
 from thumbor.utils import logger
 
-DEFAULT_AUTO_IMAGE_FORMAT_PREFERENCE = ("webp", "avif", "jpg", "heif", "png")
+DEFAULT_AUTO_IMAGE_FORMAT_PREFERENCE = (
+    "webp",
+    "avif",
+    "jxl",
+    "jpg",
+    "heif",
+    "png",
+)
 VALID_AUTO_IMAGE_FORMATS = frozenset(DEFAULT_AUTO_IMAGE_FORMAT_PREFERENCE)
 AUTO_IMAGE_FORMAT_CACHE_KEY_PREFIX = "auto_format_v1"
 
@@ -18,6 +25,7 @@ AUTO_IMAGE_FORMAT_CONFIG_FLAGS = {
     "avif": "AUTO_AVIF",
     "jpg": "AUTO_JPG",
     "heif": "AUTO_HEIF",
+    "jxl": "AUTO_JXL",
     "png": "AUTO_PNG",
 }
 
@@ -26,6 +34,7 @@ AUTO_IMAGE_FORMAT_ACCEPT_ATTRS = {
     "avif": "accepts_avif",
     "jpg": "accepts_jpeg",
     "heif": "accepts_heif",
+    "jxl": "accepts_jxl",
     "png": "accepts_png",
 }
 

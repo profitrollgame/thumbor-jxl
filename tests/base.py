@@ -32,8 +32,14 @@ try:
 except ImportError:
     HeifImagePlugin = None
 
+try:
+    from pillow_jxl import JpegXLImagePlugin
+except ImportError:
+    JpegXLImagePlugin = None
+
 AVIF_AVAILABLE = _avif is not None
 HEIF_AVAILABLE = HeifImagePlugin is not None
+JXL_AVAILABLE = JpegXLImagePlugin is not None
 
 skip_unless_avif = skipUnless(
     AVIF_AVAILABLE,
@@ -43,6 +49,11 @@ skip_unless_avif = skipUnless(
 skip_unless_heif = skipUnless(
     HEIF_AVAILABLE,
     "HEIF format support not found. Skipping HEIF tests.",
+)
+
+skip_unless_jxl = skipUnless(
+    JXL_AVAILABLE,
+    "JXL format support not found. Skipping JXL tests.",
 )
 
 
@@ -113,6 +124,11 @@ def assert_is_avif(data):
 def assert_is_heif(data):
     image = Image.open(BytesIO(data))
     assert image.format.lower() == "heif"
+
+
+def assert_is_jxl(data):
+    image = Image.open(BytesIO(data))
+    assert image.format.lower() == "jxl"
 
 
 def assert_is_png(data):

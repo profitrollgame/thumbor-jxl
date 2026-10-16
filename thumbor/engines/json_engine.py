@@ -128,6 +128,9 @@ class JSONEngine(BaseEngine):
     def heif_enabled(self):
         return self.engine.heif_enabled()
 
+    def jxl_enabled(self):
+        return self.engine.jxl_enabled()
+
     def can_auto_convert_png_to_jpg(self):
         can_convert = super().can_auto_convert_png_to_jpg()
         if can_convert:

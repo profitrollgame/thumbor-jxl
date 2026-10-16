@@ -10,7 +10,17 @@
 from thumbor.filters import BaseFilter, filter_method
 from thumbor.utils import logger
 
-ALLOWED_FORMATS = ["png", "jpeg", "jpg", "gif", "webp", "avif", "heic", "heif"]
+ALLOWED_FORMATS = [
+    "png",
+    "jpeg",
+    "jpg",
+    "gif",
+    "webp",
+    "avif",
+    "heic",
+    "heif",
+    "jxl",
+]
 
 
 class Filter(BaseFilter):

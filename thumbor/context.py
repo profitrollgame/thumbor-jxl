@@ -288,6 +288,7 @@ class RequestParameters:  # pylint: disable=too-few-public-methods,too-many-inst
         auto_png_to_jpg=None,
         accepts_avif=False,
         accepts_heif=False,
+        accepts_jxl=False,
         accepts_png=False,
         accepts_jpeg=False,
     ):
@@ -357,6 +358,7 @@ class RequestParameters:  # pylint: disable=too-few-public-methods,too-many-inst
                 accepts_webp,
                 accepts_avif,
                 accepts_heif,
+                accepts_jxl,
                 accepts_png,
                 accepts_jpeg,
             )
@@ -388,6 +390,7 @@ class RequestParameters:  # pylint: disable=too-few-public-methods,too-many-inst
                 _accepts_media_type(accepted_media_types, "image/webp"),
                 _accepts_media_type(accepted_media_types, "image/avif"),
                 _accepts_media_type(accepted_media_types, "image/heif"),
+                _accepts_media_type(accepted_media_types, "image/jxl"),
                 _accepts_media_type(accepted_media_types, "image/png"),
                 _accepts_media_type(
                     accepted_media_types,
@@ -403,6 +406,7 @@ class RequestParameters:  # pylint: disable=too-few-public-methods,too-many-inst
             self.accepts_webp,
             self.accepts_avif,
             self.accepts_heif,
+            self.accepts_jxl,
             self.accepts_png,
             self.accepts_jpeg,
         ) = accepted_formats

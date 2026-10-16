@@ -39,8 +39,14 @@ try:
 except ImportError:
     HeifImagePlugin = None
 
+try:
+    from pillow_jxl import JpegXLImagePlugin
+except ImportError:
+    JpegXLImagePlugin = None
+
 HAVE_AVIF = _avif is not None
 HAVE_HEIF = HeifImagePlugin is not None
+HAVE_JXL = JpegXLImagePlugin is not None
 
 
 FORMATS = {
@@ -53,6 +59,7 @@ FORMATS = {
     ".avif": "AVIF",
     ".heic": "HEIF",
     ".heif": "HEIF",
+    ".jxl": "JXL",
 }
 
 KEEP_EXIF_COPYRIGHT_TAGS = [
@@ -407,6 +414,13 @@ class Engine(BaseEngine):
         if ext in (".heic", ".heif") and not HAVE_HEIF:
             logger.warning(
                 "[PILEngine] HEIF encoding unavailable, defaulting to %s",
+                self.extension,
+            )
+            ext = self.extension
+
+        if ext == ".jxl" and not HAVE_JXL:
+            logger.warning(
+                "[PILEngine] JXL encoding unavailable, defaulting to %s",
                 self.extension,
             )
             ext = self.extension
