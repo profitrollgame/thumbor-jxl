@@ -705,6 +705,9 @@ class Engine(BaseEngine):
     def heif_enabled(self):
         return HAVE_HEIF
 
+    def jxl_enabled(self):
+        return HAVE_JXL
+
     def paste(self, other_engine, pos, merge=True):
         if merge and not FILTERS_AVAILABLE:
             raise RuntimeError(
